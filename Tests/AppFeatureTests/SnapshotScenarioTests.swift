@@ -43,7 +43,7 @@ private enum SnapshotScenario: String, CaseIterable {
     var view: AnyView {
         switch self {
         case .auth:
-            AnyView(AuthFlowView {})
+            AnyView(AuthFlowView(onAuthenticated: { _ in }))
         case .home:
             AnyView(HomeView(onRoute: { _ in }, onSheet: { _ in }))
         case .chats:

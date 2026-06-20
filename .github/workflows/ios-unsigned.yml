@@ -43,7 +43,14 @@ jobs:
             -archivePath "$ARCHIVE_PATH" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            clean archive
+            clean archive 2>&1 | tee archive.log
+
+      - name: Upload archive log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-unsigned-archive-log
+          path: archive.log
 
       - name: Package unsigned IPA
         run: |

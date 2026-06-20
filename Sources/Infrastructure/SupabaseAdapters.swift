@@ -667,8 +667,7 @@ public actor SupabaseRealtimeAdapter: RealtimeService {
             let channel = client.channel("chat-\(chatID)")
             channel.onPostgresChange(InsertAction.self, schema: "public", table: configuration.messagesTable) { change in
                 do {
-                    let payload = try JSONSerialization.data(withJSONObject: change.record, options: [])
-                    let record = try JSONDecoder().decode(SupabaseMessageRecord.self, from: payload)
+                    let record = try change.decodeRecord(as: SupabaseMessageRecord.self, decoder: JSONDecoder())
                     guard record.chatID == chatID else { return }
                     continuation.yield(record.model)
                 } catch {

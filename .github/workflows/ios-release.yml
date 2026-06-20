@@ -130,7 +130,14 @@ jobs:
             DEVELOPMENT_TEAM="$TEAM_ID" \
             PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME" \
             CODE_SIGN_IDENTITY="$SIGNING_IDENTITY" \
-            clean archive
+            clean archive 2>&1 | tee archive.log
+
+      - name: Upload archive log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-release-archive-log
+          path: archive.log
 
       - name: Export IPA
         run: |

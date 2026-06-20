@@ -1,0 +1,27 @@
+name: iOS
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          brew install xcodegen swiftlint swiftformat
+      - name: Generate project
+        run: xcodegen generate
+      - name: Build
+        run: xcodebuild -project Unio.xcodeproj -scheme Unio -destination 'platform=iOS Simulator,name=iPhone 16 Pro' build
+      - name: Test
+        run: xcodebuild -project Unio.xcodeproj -scheme Unio -destination 'platform=iOS Simulator,name=iPhone 16 Pro' test
+      - name: Lint
+        run: |
+          swiftlint
+          swiftformat --lint Sources Tests

@@ -37,4 +37,4 @@ jobs:
       - name: Lint
         run: |
           swiftlint
-          swiftformat --lint Sources Tests
+          swiftformat Sources Tests --lint

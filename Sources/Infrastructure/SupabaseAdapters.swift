@@ -157,8 +157,8 @@ private extension SupabaseAttachmentRecord {
 }
 
 private extension SupabaseMessageRecord {
-    var model: Message {
-        Message(
+    var model: AppCore.Message {
+        AppCore.Message(
             id: id,
             chatID: chatID,
             author: UserProfile(
@@ -524,9 +524,9 @@ public actor SupabaseChatAdapter: ChatService {
 #endif
     }
 
-    public func sendMessage(chatID: String, text: String, attachments: [MediaAttachment]) async throws -> Message {
+    public func sendMessage(chatID: String, text: String, attachments: [MediaAttachment]) async throws -> AppCore.Message {
         let author = await currentUser()
-        let message = Message(
+        let message = AppCore.Message(
             id: UUID().uuidString,
             chatID: chatID,
             author: author,
@@ -656,7 +656,7 @@ public actor SupabaseRealtimeAdapter: RealtimeService {
 
     public func disconnect() async {}
 
-    public func subscribeToChat(_ chatID: String) async throws -> AsyncStream<Message> {
+    public func subscribeToChat(_ chatID: String) async throws -> AsyncStream<AppCore.Message> {
 #if canImport(Supabase)
         guard let client = await provider.client, configuration.isConfigured else {
             return AsyncStream { continuation in

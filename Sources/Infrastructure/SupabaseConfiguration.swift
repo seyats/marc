@@ -75,18 +75,18 @@ public struct SupabaseRuntimeConfiguration: Sendable {
 }
 
 public enum SupabaseDateCodec {
-    private static let formatter: ISO8601DateFormatter = {
+    private static func makeFormatter() -> ISO8601DateFormatter {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter
-    }()
+    }
 
     public static func decode(_ string: String?) -> Date {
         guard let string else { return .now }
-        return formatter.date(from: string) ?? .now
+        return makeFormatter().date(from: string) ?? .now
     }
 
     public static func encode(_ date: Date) -> String {
-        formatter.string(from: date)
+        makeFormatter().string(from: date)
     }
 }

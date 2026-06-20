@@ -1,18 +1,18 @@
 # Unio iOS
 
-Unio is a Swift 6, SwiftUI, iOS 26-only client for a monochrome social and messaging ecosystem. This repository contains the iOS client, typed service contracts, feature modules, App Intents, and configuration placeholders. Backend services are external, with Supabase as the current primary integration path.
+Unio — это клиент на Swift 6 и SwiftUI только для iOS 26 для монохромной социальной и мессенджерной экосистемы. В этом репозитории находятся iOS-клиент, типизированные сервисные контракты, модули функций, App Intents и конфигурационные заглушки. Backend-сервисы вынесены наружу, а текущий основной путь интеграции — Supabase.
 
-## Project Shape
+## Структура проекта
 
-- `project.yml` is the source of truth for XcodeGen.
-- `Sources/UnioApp` contains the app entry point and shell.
-- `Sources/AppCore` contains routing, domain models, service protocols, fixtures, and intent handoff.
-- `Sources/DesignSystem` contains monochrome design tokens and Liquid Glass UI primitives.
-- `Sources/*Feature` contains SwiftUI feature modules.
-- `Sources/Infrastructure` contains Supabase/GRDB/AI adapter scaffolding, preview services, and legacy Firebase shims.
-- `Sources/IntentsFeature` contains App Intents and shortcuts.
+- `project.yml` — источник правды для XcodeGen.
+- `Sources/UnioApp` содержит точку входа приложения и shell.
+- `Sources/AppCore` содержит роутинг, доменные модели, протоколы сервисов, фикстуры и handoff для intents.
+- `Sources/DesignSystem` содержит монохромные design tokens и UI-примитивы на Liquid Glass.
+- `Sources/*Feature` содержит SwiftUI-модули функций.
+- `Sources/Infrastructure` содержит обвязку адаптеров Supabase/GRDB/AI, preview-сервисы и legacy-shims для Firebase.
+- `Sources/IntentsFeature` содержит App Intents и shortcuts.
 
-## macOS Setup
+## Настройка на macOS
 
 ```sh
 brew install xcodegen swiftlint swiftformat
@@ -20,15 +20,15 @@ xcodegen generate
 open Unio.xcodeproj
 ```
 
-Or run:
+Или запусти:
 
 ```sh
 ./scripts/bootstrap_macos.sh
 ```
 
-The current environment does not provide `xcrun` or an iOS Simulator, so Simulator verification is intentionally left to a macOS/Xcode environment.
+В текущей среде нет `xcrun` и iOS Simulator, поэтому проверка в Simulator намеренно оставлена для macOS/Xcode-окружения.
 
-## Build Checks
+## Проверки сборки
 
 ```sh
 xcodegen generate
@@ -37,6 +37,6 @@ swiftlint
 swiftformat --lint Sources Tests
 ```
 
-The same sequence is encoded in `scripts/verify_macos.sh` and `.github/workflows/ios.yml`. Signed IPA export is wired in `.github/workflows/ios-release.yml` and requires production signing secrets.
+Эта же последовательность описана в `scripts/verify_macos.sh` и `.github/workflows/ios.yml`. Подписанная сборка IPA подключена в `.github/workflows/ios-release.yml` и требует production-секретов для подписи.
 
-If you only need a build artifact without certificates, use `.github/workflows/ios-unsigned.yml`; it archives with signing disabled and packages the `.app` into an unsigned IPA for CI verification.
+Если нужен только артефакт сборки без сертификатов, используй `.github/workflows/ios-unsigned.yml`; он архивирует приложение с отключенной подписью и упаковывает `.app` в unsigned IPA для CI-проверки.

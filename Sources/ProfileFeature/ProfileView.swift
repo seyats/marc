@@ -146,11 +146,11 @@ private struct GeometricTexture: View {
         Canvas { context, size in
             let path = Path { path in
                 let step: CGFloat = 32
-                var x: CGFloat = 0
-                while x < size.width {
-                    path.move(to: CGPoint(x: x, y: 0))
-                    path.addLine(to: CGPoint(x: x + size.height, y: size.height))
-                    x += step
+                var stripeX: CGFloat = 0
+                while stripeX < size.width {
+                    path.move(to: CGPoint(x: stripeX, y: 0))
+                    path.addLine(to: CGPoint(x: stripeX + size.height, y: size.height))
+                    stripeX += step
                 }
             }
             context.stroke(path, with: .color(.white), lineWidth: 0.6)

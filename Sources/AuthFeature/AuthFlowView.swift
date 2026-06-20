@@ -360,10 +360,30 @@ private struct OnboardingSlide: Identifiable {
     let systemImage: String
 
     static let slides = [
-        OnboardingSlide(index: 0, title: "Сообщения без шума", subtitle: "Личные чаты, группы, каналы и защищённые переписки в одном месте.", systemImage: "bubble.left.and.bubble.right.fill"),
-        OnboardingSlide(index: 1, title: "Лента и истории", subtitle: "Публикуйте мысли, фото, видео и короткие истории в единой монохромной среде.", systemImage: "rectangle.stack.fill"),
-        OnboardingSlide(index: 2, title: "Прямые эфиры", subtitle: "Запускайте Unio Live, общайтесь с аудиторией и собирайте сообщества.", systemImage: "dot.radiowaves.left.and.right"),
-        OnboardingSlide(index: 3, title: "Unio AI", subtitle: "Ассистент помогает писать, переводить и модерировать контент.", systemImage: "sparkles")
+        OnboardingSlide(
+            index: 0,
+            title: "Сообщения без шума",
+            subtitle: "Личные чаты, группы, каналы и защищённые переписки в одном месте.",
+            systemImage: "bubble.left.and.bubble.right.fill"
+        ),
+        OnboardingSlide(
+            index: 1,
+            title: "Лента и истории",
+            subtitle: "Публикуйте мысли, фото, видео и короткие истории в единой монохромной среде.",
+            systemImage: "rectangle.stack.fill"
+        ),
+        OnboardingSlide(
+            index: 2,
+            title: "Прямые эфиры",
+            subtitle: "Запускайте Unio Live, общайтесь с аудиторией и собирайте сообщества.",
+            systemImage: "dot.radiowaves.left.and.right"
+        ),
+        OnboardingSlide(
+            index: 3,
+            title: "Unio AI",
+            subtitle: "Ассистент помогает писать, переводить и модерировать контент.",
+            systemImage: "sparkles"
+        ),
     ]
 }
 

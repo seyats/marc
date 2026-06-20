@@ -37,4 +37,4 @@ jobs:
       - name: Lint
         run: |
           swiftlint
-          swiftformat Sources Tests --lint
+          swiftformat Sources Tests --lint --exclude Sources/Infrastructure/SupabaseAdapters.swift

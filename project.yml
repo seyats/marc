@@ -43,6 +43,9 @@ targets:
     platform: iOS
     sources:
       - Sources/AppCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
   DesignSystem:
     type: framework
     platform: iOS
@@ -50,6 +53,9 @@ targets:
       - Sources/DesignSystem
     dependencies:
       - target: AppCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
   Infrastructure:
     type: framework
     platform: iOS
@@ -69,6 +75,9 @@ targets:
         product: Collections
       - package: SwiftAlgorithms
         product: Algorithms
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
   AuthFeature:
     type: framework
     platform: iOS
@@ -77,6 +86,9 @@ targets:
     dependencies:
       - target: AppCore
       - target: DesignSystem
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
   HomeFeature:
     type: framework
     platform: iOS
@@ -85,6 +97,9 @@ targets:
     dependencies:
       - target: AppCore
       - target: DesignSystem
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
   ChatsFeature:
     type: framework
     platform: iOS
@@ -93,6 +108,9 @@ targets:
     dependencies:
       - target: AppCore
       - target: DesignSystem
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
   ProfileFeature:
     type: framework
     platform: iOS
@@ -101,6 +119,9 @@ targets:
     dependencies:
       - target: AppCore
       - target: DesignSystem
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
   AIHubFeature:
     type: framework
     platform: iOS
@@ -109,6 +130,9 @@ targets:
     dependencies:
       - target: AppCore
       - target: DesignSystem
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
   IntentsFeature:
     type: framework
     platform: iOS
@@ -116,6 +140,9 @@ targets:
       - Sources/IntentsFeature
     dependencies:
       - target: AppCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
   Unio:
     type: application
     platform: iOS
@@ -155,6 +182,9 @@ targets:
       - Tests/AppCoreTests
     dependencies:
       - target: AppCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
   AppFeatureTests:
     type: bundle.unit-test
     platform: iOS
@@ -171,6 +201,9 @@ targets:
       - target: IntentsFeature
       - package: SnapshotTesting
         product: SnapshotTesting
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
 schemes:
   Unio:
     build:

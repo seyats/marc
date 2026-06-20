@@ -5,7 +5,7 @@ public struct UnioIntentsPackage: AppIntentsPackage {
 }
 
 public struct UnioShortcuts: AppShortcutsProvider {
-    public static var shortcutTileColor: ShortcutTileColor { .gray }
+    public static var shortcutTileColor: ShortcutTileColor { .grayBlue }
 
     public static var appShortcuts: [AppShortcut] {
         AppShortcut(

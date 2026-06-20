@@ -230,7 +230,7 @@ public actor SupabaseAuthAdapter: AuthService {
         do {
             let session = try await client.auth.session
             let user = session.user
-            if let profile = try await loadProfile(id: user.id, client: client) {
+            if let profile = try await loadProfile(id: user.id.uuidString, client: client) {
                 return .signedIn(profile)
             }
             return .signedIn(profileFrom(user: user))
@@ -278,7 +278,7 @@ public actor SupabaseAuthAdapter: AuthService {
         }
         _ = try await client.auth.verifyOTP(phone: phone, token: code, type: .sms)
         pendingPhone = nil
-        if let user = try? await client.auth.user(), let profile = try await loadProfile(id: user.id, client: client) {
+        if let user = try? await client.auth.user(), let profile = try await loadProfile(id: user.id.uuidString, client: client) {
             return profile
         }
         if let user = try? await client.auth.user() {

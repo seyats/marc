@@ -45,6 +45,7 @@ targets:
       - Sources/AppCore
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.appcore
         GENERATE_INFOPLIST_FILE: YES
   DesignSystem:
     type: framework
@@ -55,6 +56,7 @@ targets:
       - target: AppCore
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.designsystem
         GENERATE_INFOPLIST_FILE: YES
   Infrastructure:
     type: framework
@@ -77,6 +79,7 @@ targets:
         product: Algorithms
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.infrastructure
         GENERATE_INFOPLIST_FILE: YES
   AuthFeature:
     type: framework
@@ -88,6 +91,7 @@ targets:
       - target: DesignSystem
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.authfeature
         GENERATE_INFOPLIST_FILE: YES
   HomeFeature:
     type: framework
@@ -99,6 +103,7 @@ targets:
       - target: DesignSystem
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.homefeature
         GENERATE_INFOPLIST_FILE: YES
   ChatsFeature:
     type: framework
@@ -110,6 +115,7 @@ targets:
       - target: DesignSystem
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.chatsfeature
         GENERATE_INFOPLIST_FILE: YES
   ProfileFeature:
     type: framework
@@ -121,6 +127,7 @@ targets:
       - target: DesignSystem
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.profilefeature
         GENERATE_INFOPLIST_FILE: YES
   AIHubFeature:
     type: framework
@@ -132,6 +139,7 @@ targets:
       - target: DesignSystem
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.aihubfeature
         GENERATE_INFOPLIST_FILE: YES
   IntentsFeature:
     type: framework
@@ -142,6 +150,7 @@ targets:
       - target: AppCore
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.intentsfeature
         GENERATE_INFOPLIST_FILE: YES
   Unio:
     type: application
@@ -184,6 +193,7 @@ targets:
       - target: AppCore
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.tests.appcore
         GENERATE_INFOPLIST_FILE: YES
   AppFeatureTests:
     type: bundle.unit-test
@@ -203,6 +213,7 @@ targets:
         product: SnapshotTesting
     settings:
       base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.unio.ios.tests.appfeature
         GENERATE_INFOPLIST_FILE: YES
 schemes:
   Unio:

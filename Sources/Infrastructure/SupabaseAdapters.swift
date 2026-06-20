@@ -218,12 +218,12 @@ public actor SupabaseAuthAdapter: AuthService {
     private var pendingPhone: String?
 
     public init(configuration: SupabaseRuntimeConfiguration) {
-        self.provider = SupabaseClientProvider(configuration: configuration)
+        provider = SupabaseClientProvider(configuration: configuration)
         self.configuration = configuration
     }
 
     public func currentState() async -> AuthState {
-#if canImport(Supabase)
+    #if canImport(Supabase)
         guard let client = await provider.client, configuration.isConfigured else {
             return .signedOut
         }
@@ -237,21 +237,21 @@ public actor SupabaseAuthAdapter: AuthService {
         } catch {
             return .signedOut
         }
-#else
+    #else
         return .signedIn(Fixtures.currentUser)
-#endif
+    #endif
     }
 
     public func startPhoneVerification(phone: String) async throws {
-#if canImport(Supabase)
+    #if canImport(Supabase)
         pendingPhone = phone
         guard let client = await provider.client else { return }
         try await client.auth.signInWithOTP(phone: phone)
-#endif
+    #endif
     }
 
     public func signIn(with provider: AuthProvider) async throws -> UserProfile {
-#if canImport(Supabase)
+    #if canImport(Supabase)
         guard let client = await self.provider.client else {
             return Fixtures.currentUser
         }
@@ -263,13 +263,13 @@ public actor SupabaseAuthAdapter: AuthService {
         case .github:
             throw UnioServiceError.unconfigured("OAuth GitHub потребует redirect scheme и дополнительную настройку Supabase.")
         }
-#else
+    #else
         return Fixtures.currentUser
-#endif
+    #endif
     }
 
     public func confirmCode(_ code: String) async throws -> UserProfile {
-#if canImport(Supabase)
+    #if canImport(Supabase)
         guard let client = await provider.client else {
             return Fixtures.currentUser
         }
@@ -285,20 +285,20 @@ public actor SupabaseAuthAdapter: AuthService {
             return profileFrom(user: user)
         }
         return Fixtures.currentUser
-#else
+    #else
         return Fixtures.currentUser
-#endif
+    #endif
     }
 
     public func signOut() async throws {
-#if canImport(Supabase)
+    #if canImport(Supabase)
         pendingPhone = nil
         guard let client = await provider.client else { return }
         try await client.auth.signOut()
-#endif
+    #endif
     }
 
-#if canImport(Supabase)
+    #if canImport(Supabase)
     private func loadProfile(id: String, client: SupabaseClient) async throws -> UserProfile? {
         do {
             let profile: SupabaseProfileRecord = try await client
@@ -356,7 +356,7 @@ public actor SupabaseAuthAdapter: AuthService {
         }
         return nil
     }
-#endif
+    #endif
 }
 
 public actor SupabaseFeedAdapter: FeedService {
@@ -368,13 +368,13 @@ public actor SupabaseFeedAdapter: FeedService {
         configuration: SupabaseRuntimeConfiguration,
         currentUser: @escaping @Sendable () async -> UserProfile = { Fixtures.currentUser }
     ) {
-        self.provider = SupabaseClientProvider(configuration: configuration)
+        provider = SupabaseClientProvider(configuration: configuration)
         self.configuration = configuration
         self.currentUser = currentUser
     }
 
     public func loadFeed(cursor: String?, followingOnly: Bool) async throws -> FeedPage {
-#if canImport(Supabase)
+    #if canImport(Supabase)
         guard let client = await provider.client, configuration.isConfigured else {
             return FeedPage(posts: Fixtures.posts, nextCursor: nil)
         }
@@ -385,14 +385,14 @@ public actor SupabaseFeedAdapter: FeedService {
             .execute()
             .value
         return FeedPage(posts: posts.map(\.model), nextCursor: nil)
-#else
+    #else
         return FeedPage(posts: Fixtures.posts, nextCursor: nil)
-#endif
+    #endif
     }
 
     public func publish(_ draft: DraftPost) async throws -> Post {
         let author = await currentUser()
-#if canImport(Supabase)
+    #if canImport(Supabase)
         guard let client = await provider.client, configuration.isConfigured else {
             return Post(
                 id: UUID().uuidString,
@@ -450,7 +450,7 @@ public actor SupabaseFeedAdapter: FeedService {
             .execute()
             .value
         return inserted.model
-#else
+    #else
         return Post(
             id: UUID().uuidString,
             author: author,
@@ -465,7 +465,7 @@ public actor SupabaseFeedAdapter: FeedService {
             isBookmarked: false,
             tags: []
         )
-#endif
+    #endif
     }
 
     public func toggleLike(postID: String, isLiked: Bool) async throws {}
@@ -482,13 +482,13 @@ public actor SupabaseChatAdapter: ChatService {
         configuration: SupabaseRuntimeConfiguration,
         currentUser: @escaping @Sendable () async -> UserProfile = { Fixtures.currentUser }
     ) {
-        self.provider = SupabaseClientProvider(configuration: configuration)
+        provider = SupabaseClientProvider(configuration: configuration)
         self.configuration = configuration
         self.currentUser = currentUser
     }
 
-    public func loadChats(cursor: String?) async throws -> ChatPage {
-#if canImport(Supabase)
+    public func loadChats(cursor _: String?) async throws -> ChatPage {
+    #if canImport(Supabase)
         guard let client = await provider.client, configuration.isConfigured else {
             return ChatPage(chats: Fixtures.chats, nextCursor: nil)
         }
@@ -499,16 +499,20 @@ public actor SupabaseChatAdapter: ChatService {
             .execute()
             .value
         return ChatPage(chats: rows.map(\.model), nextCursor: nil)
-#else
+    #else
         return ChatPage(chats: Fixtures.chats, nextCursor: nil)
-#endif
+    #endif
     }
 
-    public func loadMessages(chatID: String, cursor: String?) async throws -> MessagePage {
-#if canImport(Supabase)
+    public func loadMessages(chatID: String, cursor _: String?) async throws -> MessagePage {
+    #if canImport(Supabase)
         guard let client = await provider.client, configuration.isConfigured else {
             let messages = Fixtures.messages.filter { $0.chatID == chatID }
-            return MessagePage(messages: messages.isEmpty ? Fixtures.messages.filter { $0.chatID == "chat-1" } : messages, nextCursor: nil)
+            let fallbackMessages = Fixtures.messages.filter { $0.chatID == "chat-1" }
+            return MessagePage(
+                messages: messages.isEmpty ? fallbackMessages : messages,
+                nextCursor: nil
+            )
         }
         let rows: [SupabaseMessageRecord] = try await client
             .from(configuration.messagesTable)
@@ -518,10 +522,14 @@ public actor SupabaseChatAdapter: ChatService {
             .execute()
             .value
         return MessagePage(messages: rows.map(\.model), nextCursor: nil)
-#else
+    #else
         let messages = Fixtures.messages.filter { $0.chatID == chatID }
-        return MessagePage(messages: messages.isEmpty ? Fixtures.messages.filter { $0.chatID == "chat-1" } : messages, nextCursor: nil)
-#endif
+        let fallbackMessages = Fixtures.messages.filter { $0.chatID == "chat-1" }
+        return MessagePage(
+            messages: messages.isEmpty ? fallbackMessages : messages,
+            nextCursor: nil
+        )
+    #endif
     }
 
     public func sendMessage(chatID: String, text: String, attachments: [MediaAttachment]) async throws -> AppCore.Message {
@@ -537,7 +545,7 @@ public actor SupabaseChatAdapter: ChatService {
             isOutgoing: true,
             isEdited: false
         )
-#if canImport(Supabase)
+    #if canImport(Supabase)
         guard let client = await provider.client, configuration.isConfigured else {
             return message
         }
@@ -580,9 +588,9 @@ public actor SupabaseChatAdapter: ChatService {
             .execute()
             .value
         return inserted.model
-#else
+    #else
         return message
-#endif
+    #endif
     }
 }
 
@@ -591,12 +599,12 @@ public actor SupabaseMediaAdapter: MediaService {
     private let configuration: SupabaseRuntimeConfiguration
 
     public init(configuration: SupabaseRuntimeConfiguration) {
-        self.provider = SupabaseClientProvider(configuration: configuration)
+        provider = SupabaseClientProvider(configuration: configuration)
         self.configuration = configuration
     }
 
     public func upload(_ attachment: MediaAttachment, data: Data) async throws -> MediaAttachment {
-#if canImport(Supabase)
+    #if canImport(Supabase)
         guard let client = await provider.client, configuration.isConfigured else {
             return attachment
         }
@@ -625,9 +633,9 @@ public actor SupabaseMediaAdapter: MediaService {
             duration: attachment.duration,
             byteCount: attachment.byteCount
         )
-#else
+    #else
         return attachment
-#endif
+    #endif
     }
 
     public func cachedURL(for attachment: MediaAttachment) async -> URL? {
@@ -636,11 +644,11 @@ public actor SupabaseMediaAdapter: MediaService {
 }
 
 public actor SupabaseNotificationAdapter: NotificationService {
-    public init(configuration: SupabaseRuntimeConfiguration) {}
+    public init(configuration _: SupabaseRuntimeConfiguration) {}
 
     public func registerForPushNotifications() async throws {}
 
-    public func updateDeviceToken(_ token: Data) async throws {}
+    public func updateDeviceToken(_: Data) async throws {}
 }
 
 public actor SupabaseRealtimeAdapter: RealtimeService {
@@ -648,7 +656,7 @@ public actor SupabaseRealtimeAdapter: RealtimeService {
     private let configuration: SupabaseRuntimeConfiguration
 
     public init(configuration: SupabaseRuntimeConfiguration) {
-        self.provider = SupabaseClientProvider(configuration: configuration)
+        provider = SupabaseClientProvider(configuration: configuration)
         self.configuration = configuration
     }
 
@@ -657,7 +665,7 @@ public actor SupabaseRealtimeAdapter: RealtimeService {
     public func disconnect() async {}
 
     public func subscribeToChat(_ chatID: String) async throws -> AsyncStream<AppCore.Message> {
-#if canImport(Supabase)
+    #if canImport(Supabase)
         guard let client = await provider.client, configuration.isConfigured else {
             return AsyncStream { continuation in
                 continuation.finish()
@@ -684,10 +692,10 @@ public actor SupabaseRealtimeAdapter: RealtimeService {
                 }
             }
         }
-#else
+    #else
         return AsyncStream { continuation in
             continuation.finish()
         }
-#endif
+    #endif
     }
 }

@@ -165,6 +165,8 @@ targets:
       - target: AppCore
       - target: DesignSystem
       - target: Infrastructure
+      - package: Lottie
+        product: Lottie
       - target: AuthFeature
       - target: HomeFeature
       - target: ChatsFeature

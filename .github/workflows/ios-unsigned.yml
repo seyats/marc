@@ -1,0 +1,59 @@
+name: iOS Unsigned IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: macos-latest
+    env:
+      SCHEME: Unio
+      PROJECT: Unio.xcodeproj
+      ARCHIVE_PATH: build/Unio.xcarchive
+      EXPORT_PATH: build/unsigned
+      IPA_NAME: Unio-unsigned.ipa
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          brew install xcodegen swiftlint swiftformat
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Archive without signing
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$ARCHIVE_PATH" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            clean archive
+
+      - name: Package unsigned IPA
+        run: |
+          set -euo pipefail
+          APP_PATH=$(find "$ARCHIVE_PATH/Products/Applications" -name '*.app' -print -quit)
+          if [ -z "$APP_PATH" ]; then
+            echo "Unable to find the built .app inside the archive."
+            exit 1
+          fi
+          rm -rf "$EXPORT_PATH"
+          mkdir -p "$EXPORT_PATH/Payload"
+          cp -R "$APP_PATH" "$EXPORT_PATH/Payload/"
+          (cd "$EXPORT_PATH" && zip -qry "../$IPA_NAME" Payload)
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Unio-unsigned-ipa
+          path: build/Unio-unsigned.ipa

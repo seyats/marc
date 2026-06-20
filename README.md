@@ -38,3 +38,5 @@ swiftformat --lint Sources Tests
 ```
 
 The same sequence is encoded in `scripts/verify_macos.sh` and `.github/workflows/ios.yml`. Signed IPA export is wired in `.github/workflows/ios-release.yml` and requires production signing secrets.
+
+If you only need a build artifact without certificates, use `.github/workflows/ios-unsigned.yml`; it archives with signing disabled and packages the `.app` into an unsigned IPA for CI verification.
